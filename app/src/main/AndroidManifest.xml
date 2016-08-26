@@ -19,6 +19,18 @@
             android:name=".CoordinatorLayoutExample"
             android:label="@string/coordinator_example_name">
         </activity>
+        <activity
+            android:name=".CardScroll"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/card_scroll_title">
+        </activity>
+        <activity
+            android:name=".TextAnimationExample">
+        </activity>
+        <activity
+            android:name=".CustomViewExample"
+            android:label="@string/custom_view_name">
+        </activity>
     </application>
 
 </manifest>
