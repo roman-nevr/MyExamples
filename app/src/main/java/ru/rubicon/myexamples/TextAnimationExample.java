@@ -129,7 +129,7 @@ public class TextAnimationExample extends AppCompatActivity implements TextSwitc
     private class ByeBye implements ICommand{
         @Override
         public void execute() {
-            word = "ByeBye";
+            word = "ByeBye1111111111111111111";
         }
 
         @Override

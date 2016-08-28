@@ -14,10 +14,12 @@ import android.view.View;
  * TODO: document your custom view class.
  */
 public class DoublesideView extends View {
-    private String mExampleString; // TODO: use a default from R.string...
+    private String frontSideString, backSideString; // TODO: use a default from R.string...
     private int mExampleColor = Color.BLACK; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
+    private ICommand action;
+    private SideAction frontSideAction, backSideAction;
 
     private TextPaint mTextPaint;
     private float mTextWidth;
@@ -43,8 +45,8 @@ public class DoublesideView extends View {
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.DoublesideView, defStyle, 0);
 
-        mExampleString = a.getString(
-                R.styleable.DoublesideView_exampleString);
+        frontSideString = a.getString(
+                R.styleable.DoublesideView_frontSideString);
         mExampleColor = a.getColor(
                 R.styleable.DoublesideView_exampleColor,
                 mExampleColor);
@@ -67,6 +69,13 @@ public class DoublesideView extends View {
         mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextAlign(Paint.Align.LEFT);
 
+        frontSideAction = new SideAction(frontSideString);
+        backSideAction = new SideAction(backSideString);
+        frontSideAction.setNextAction(backSideAction);
+        backSideAction.setNextAction(frontSideAction);
+        action = frontSideAction;
+        setOnClickListener(new DoublesideViewOnClickListener());
+
         // Update TextPaint and text measurements from attributes
         invalidateTextPaintAndMeasurements();
     }
@@ -74,7 +83,13 @@ public class DoublesideView extends View {
     private void invalidateTextPaintAndMeasurements() {
         mTextPaint.setTextSize(mExampleDimension);
         mTextPaint.setColor(mExampleColor);
-        mTextWidth = mTextPaint.measureText(mExampleString);
+        float frontSideStringWidth = mTextPaint.measureText(frontSideString);
+        float backSideStringWidth = mTextPaint.measureText(backSideString);
+        if(frontSideStringWidth > backSideStringWidth){
+            mTextWidth = frontSideStringWidth;
+        }else {
+            mTextWidth = backSideStringWidth;
+        }
         Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
         mTextHeight = fontMetrics.bottom;
 
@@ -98,10 +113,10 @@ public class DoublesideView extends View {
         if (mTextWidth > freeSpace){
             mExampleDimension = mExampleDimension * (freeSpace/mTextWidth);
             mTextPaint.setTextSize(mExampleDimension);
-            mTextWidth = mTextPaint.measureText(mExampleString);
+            mTextWidth = mTextPaint.measureText(frontSideString);
             mTextHeight = mTextPaint.getFontMetrics().bottom;
         }
-        canvas.drawText(mExampleString,
+        canvas.drawText(frontSideString,
                 paddingLeft + (contentWidth - mTextWidth) / 2,
                 paddingTop + (contentHeight + mTextHeight) / 2,
                 mTextPaint);
@@ -154,7 +169,7 @@ public class DoublesideView extends View {
             // элемента в рамках максимальных значений.
             // Если ваш элемент заполняет все доступное
             // пространство, верните внешнюю границу.
-            //result = Math.round(mTextPaint.measureText(mExampleString))+getPaddingRight()+getPaddingLeft();
+            //result = Math.round(mTextPaint.measureText(frontSideString))+getPaddingRight()+getPaddingLeft();
             result = 150;
 
         } else if (specMode == MeasureSpec.EXACTLY) {
@@ -170,7 +185,7 @@ public class DoublesideView extends View {
      * @return The example string attribute value.
      */
     public String getExampleString() {
-        return mExampleString;
+        return frontSideString;
     }
 
     /**
@@ -180,7 +195,7 @@ public class DoublesideView extends View {
      * @param exampleString The example string attribute value to use.
      */
     public void setExampleString(String exampleString) {
-        mExampleString = exampleString;
+        frontSideString = exampleString;
         invalidateTextPaintAndMeasurements();
     }
 
@@ -241,5 +256,44 @@ public class DoublesideView extends View {
      */
     public void setExampleDrawable(Drawable exampleDrawable) {
         mExampleDrawable = exampleDrawable;
+    }
+
+
+    private class DoublesideViewOnClickListener implements OnClickListener {
+        @Override
+        public void onClick(View view) {
+
+        }
+    }
+
+    private interface ICommand{
+        String execute();
+        ICommand getNext();
+    }
+
+    private class SideAction implements ICommand{
+        String string;
+        ICommand nextAction;
+        public SideAction(String string){
+            this.string = string;
+        }
+
+        void setNextAction(ICommand action){
+            this.nextAction = action;
+        }
+
+        void setString(String string){
+            this.string = string;
+        }
+
+        @Override
+        public String execute() {
+            return string;
+        }
+
+        @Override
+        public ICommand getNext() {
+            return nextAction;
+        }
     }
 }
