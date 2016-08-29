@@ -5,16 +5,19 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 
 /**
  * TODO: document your custom view class.
  */
 public class DoublesideView extends View {
-    private String frontSideString, backSideString; // TODO: use a default from R.string...
+    private String frontSideString, backSideString, longestSting; // TODO: use a default from R.string...
     private int mExampleColor = Color.BLACK; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
@@ -24,6 +27,7 @@ public class DoublesideView extends View {
     private TextPaint mTextPaint;
     private float mTextWidth;
     private float mTextHeight;
+    int maxWidth, maxHeight;
     // Конструктор, необходимый для создания элемента внутри кода программы
     public DoublesideView(Context context) {
         super(context);
@@ -74,6 +78,13 @@ public class DoublesideView extends View {
         action = frontSideAction;
         setOnClickListener(new DoublesideViewOnClickListener());
 
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        maxWidth = size.x;
+        maxHeight = size.y;
+
         // Update TextPaint and text measurements from attributes
         invalidateTextPaintAndMeasurements();
     }
@@ -85,8 +96,10 @@ public class DoublesideView extends View {
         float backSideStringWidth = mTextPaint.measureText(backSideString);
         if(frontSideStringWidth > backSideStringWidth){
             mTextWidth = frontSideStringWidth;
+            longestSting = frontSideString;
         }else {
             mTextWidth = backSideStringWidth;
+            longestSting = backSideString;
         }
         Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
         mTextHeight = fontMetrics.bottom;
@@ -107,22 +120,21 @@ public class DoublesideView extends View {
         int contentHeight = getHeight() - paddingTop - paddingBottom;
 
         // Draw the text.
+        /*
         float freeSpace = getWidth()- getPaddingLeft() - getPaddingRight();
-        /*if (mTextWidth > freeSpace){
+        if (mTextWidth > freeSpace){
             mExampleDimension = mExampleDimension * (freeSpace/mTextWidth);
             mTextPaint.setTextSize(mExampleDimension);
             mTextWidth = mTextPaint.measureText(frontSideString);
             mTextHeight = mTextPaint.getFontMetrics().bottom;
-        }*/
-        canvas.drawText(frontSideString,
-                paddingLeft + (contentWidth - mTextWidth) / 2,
-                paddingTop + (contentHeight + mTextHeight /*- mTextPaint.getFontMetrics().top*/) / 2,
-                mTextPaint);
-
+        }
+        */
+        float x = paddingLeft + (contentWidth - mTextWidth) / 2;
+        float y = paddingTop + (contentHeight / 2 + mTextHeight);
+        canvas.drawText(action.execute(), x, y, mTextPaint);
         // Draw the example drawable on top of the text.
         if (mExampleDrawable != null) {
-            mExampleDrawable.setBounds(paddingLeft, paddingTop,
-                    paddingLeft + contentWidth, paddingTop + contentHeight);
+            mExampleDrawable.setBounds(paddingLeft, paddingTop, paddingLeft + contentWidth, paddingTop + contentHeight);
             mExampleDrawable.draw(canvas);
         }
     }
@@ -135,14 +147,15 @@ public class DoublesideView extends View {
         // иначе получится выброс исключения при
         // размещении элемента внутри разметки.
         float freeSpace = measuredWidth - getPaddingLeft() - getPaddingRight();
-        cutFontSize(freeSpace, mTextWidth, mTextPaint);
+        cutFontSize(freeSpace, mTextWidth);
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
-    private void cutFontSize(float freeSpace, float textWidth, TextPaint textPaint) {
+    private void cutFontSize(float freeSpace, float textWidth) {
         if (freeSpace < textWidth){
-            mExampleDimension = mExampleDimension * freeSpace / textWidth * 0.98f;
-            textPaint.setTextSize(mExampleDimension);
+            mExampleDimension = mExampleDimension * freeSpace / textWidth * 0.99f;
+            mTextPaint.setTextSize(mExampleDimension);
+            mTextWidth = mTextPaint.measureText(longestSting);
         }
     }
 
@@ -180,7 +193,9 @@ public class DoublesideView extends View {
             // пространство, верните внешнюю границу.
             //result = Math.round(mTextPaint.measureText(frontSideString))+getPaddingRight()+getPaddingLeft();
             result = Math.round(mTextWidth) + getPaddingLeft() + getPaddingRight();
-
+            if (result > maxWidth){
+                result = maxWidth;
+            }
         } else if (specMode == MeasureSpec.EXACTLY) {
             // Если ваш элемент может поместиться внутри этих границ, верните это значение.
             result = specSize;
