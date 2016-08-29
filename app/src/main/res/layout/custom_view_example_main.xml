@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".CustomViewExample">
 
     <ru.rubicon.myexamples.DoublesideView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:background="#ccc"
-        android:paddingBottom="40dp"
-        android:paddingTop="40dp"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
         app:exampleColor="@color/colorPrimary"
-        app:exampleDimension="14sp"
-        app:exampleDrawable="@android:drawable/ic_menu_add"
-        app:frontSideString="Hello, DoublesideView y"
+        app:exampleDimension="35dp"
+
+        app:frontSideString="Hello, DoublesideView"
         app:backSideString="bye!"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:textSize="80dp"
+        android:paddingLeft="20dp"
+        android:text="New Button a very loooooooooooooong word"
+        android:textSize="24dp"
         android:id="@+id/button" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="24dp"
         android:id="@+id/editText"
-        android:text="Hello, guy"/>
+        android:text="New Button a very loooooooooooooong word"/>
 
 </LinearLayout>
