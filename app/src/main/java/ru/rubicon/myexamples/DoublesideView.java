@@ -45,11 +45,9 @@ public class DoublesideView extends View {
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.DoublesideView, defStyle, 0);
 
-        frontSideString = a.getString(
-                R.styleable.DoublesideView_frontSideString);
-        mExampleColor = a.getColor(
-                R.styleable.DoublesideView_exampleColor,
-                mExampleColor);
+        frontSideString = a.getString(R.styleable.DoublesideView_frontSideString);
+        backSideString = a.getString(R.styleable.DoublesideView_backSideString);
+        mExampleColor = a.getColor(R.styleable.DoublesideView_exampleColor,mExampleColor);
         // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
         // values that should fall on pixel boundaries.
         mExampleDimension = a.getDimension(
@@ -110,15 +108,15 @@ public class DoublesideView extends View {
 
         // Draw the text.
         float freeSpace = getWidth()- getPaddingLeft() - getPaddingRight();
-        if (mTextWidth > freeSpace){
+        /*if (mTextWidth > freeSpace){
             mExampleDimension = mExampleDimension * (freeSpace/mTextWidth);
             mTextPaint.setTextSize(mExampleDimension);
             mTextWidth = mTextPaint.measureText(frontSideString);
             mTextHeight = mTextPaint.getFontMetrics().bottom;
-        }
+        }*/
         canvas.drawText(frontSideString,
                 paddingLeft + (contentWidth - mTextWidth) / 2,
-                paddingTop + (contentHeight + mTextHeight) / 2,
+                paddingTop + (contentHeight + mTextHeight /*- mTextPaint.getFontMetrics().top*/) / 2,
                 mTextPaint);
 
         // Draw the example drawable on top of the text.
@@ -136,7 +134,16 @@ public class DoublesideView extends View {
         // Вы ДОЛЖНЫ сделать вызов метода setMeasuredDimension,
         // иначе получится выброс исключения при
         // размещении элемента внутри разметки.
-        setMeasuredDimension(measuredHeight, measuredWidth);
+        float freeSpace = measuredWidth - getPaddingLeft() - getPaddingRight();
+        cutFontSize(freeSpace, mTextWidth, mTextPaint);
+        setMeasuredDimension(measuredWidth, measuredHeight);
+    }
+
+    private void cutFontSize(float freeSpace, float textWidth, TextPaint textPaint) {
+        if (freeSpace < textWidth){
+            mExampleDimension = mExampleDimension * freeSpace / textWidth * 0.98f;
+            textPaint.setTextSize(mExampleDimension);
+        }
     }
 
     private int measureHeight(int measureSpec) {
@@ -146,12 +153,13 @@ public class DoublesideView extends View {
         int result = 500;
 
         if (specMode == MeasureSpec.AT_MOST) {
+            //wrap content
             // Рассчитайте идеальный размер вашего
             // элемента в рамках максимальных значений.
             // Если ваш элемент заполняет все доступное
             // пространство, верните внешнюю границу.
             //result = Math.round(mTextPaint.getFontMetrics().top+mTextPaint.getFontMetrics().bottom);
-            result = 150;
+            result = Math.round(mTextHeight - mTextPaint.getFontMetrics().top) + getPaddingBottom() + getPaddingTop();
 
         } else if (specMode == MeasureSpec.EXACTLY) {
             // Если ваш элемент может поместиться внутри этих границ, верните это значение.
@@ -165,12 +173,13 @@ public class DoublesideView extends View {
         // Размер по умолчанию, если ограничения не были установлены.
         int result = 500;
         if (specMode == MeasureSpec.AT_MOST) {
+            //wrap content
             // Рассчитайте идеальный размер вашего
             // элемента в рамках максимальных значений.
             // Если ваш элемент заполняет все доступное
             // пространство, верните внешнюю границу.
             //result = Math.round(mTextPaint.measureText(frontSideString))+getPaddingRight()+getPaddingLeft();
-            result = 150;
+            result = Math.round(mTextWidth) + getPaddingLeft() + getPaddingRight();
 
         } else if (specMode == MeasureSpec.EXACTLY) {
             // Если ваш элемент может поместиться внутри этих границ, верните это значение.

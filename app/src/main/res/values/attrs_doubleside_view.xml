@@ -1,7 +1,7 @@
 <resources>
     <declare-styleable name="DoublesideView">
         <attr name="frontSideString" format="string" />
-        <attr  name="backSideString" format="string" />
+        <attr name="backSideString" format="string" />
         <attr name="exampleDimension" format="dimension" />
         <attr name="exampleColor" format="color" />
         <attr name="exampleDrawable" format="color|reference" />
