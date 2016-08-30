@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".CustomViewExample">
 
-    <ru.rubicon.myexamples.DoublesideView
+    <ru.rubicon.myexamples.views.DoublesideView
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:background="#ccc"

@@ -1,4 +1,4 @@
-package ru.rubicon.myexamples;
+package ru.rubicon.myexamples.views;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -15,6 +15,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
+
+import ru.rubicon.myexamples.R;
 
 /**
  * TODO: document your custom view class.
