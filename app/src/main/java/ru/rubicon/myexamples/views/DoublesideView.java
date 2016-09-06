@@ -1,5 +1,7 @@
-package ru.rubicon.myexamples;
+package ru.rubicon.myexamples.views;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -12,17 +14,21 @@ import android.util.AttributeSet;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+
+import ru.rubicon.myexamples.R;
 
 /**
  * TODO: document your custom view class.
  */
-public class DoublesideView extends View {
-    private String frontSideString, backSideString, longestSting; // TODO: use a default from R.string...
+public class DoublesideView extends View implements View.OnClickListener {
+    private String frontSideString, backSideString, longestSting, currentString; // TODO: use a default from R.string...
     private int mExampleColor = Color.BLACK; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
     private ICommand action;
     private SideAction frontSideAction, backSideAction;
+    private ObjectAnimator rotation1, rotation2;
 
     private TextPaint mTextPaint;
     private float mTextWidth;
@@ -69,22 +75,15 @@ public class DoublesideView extends View {
         // Set up a default TextPaint object
         mTextPaint = new TextPaint();
         mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
 
         frontSideAction = new SideAction(frontSideString);
         backSideAction = new SideAction(backSideString);
         frontSideAction.setNextAction(backSideAction);
         backSideAction.setNextAction(frontSideAction);
         action = frontSideAction;
-        setOnClickListener(new DoublesideViewOnClickListener());
-
-        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        maxWidth = size.x;
-        maxHeight = size.y;
-
+        setOnClickListener(this);
+        currentString = frontSideString;
         // Update TextPaint and text measurements from attributes
         invalidateTextPaintAndMeasurements();
     }
@@ -108,7 +107,7 @@ public class DoublesideView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        //super.onDraw(canvas);
 
         // TODO: consider storing these as member variables to reduce
         // allocations per draw cycle.
@@ -120,7 +119,16 @@ public class DoublesideView extends View {
         int contentHeight = getHeight() - paddingTop - paddingBottom;
 
         // Draw the text.
-        float x = paddingLeft + (contentWidth - mTextWidth) / 2;
+        /*
+        float freeSpace = getWidth()- getPaddingLeft() - getPaddingRight();
+        if (mTextWidth > freeSpace){
+            mExampleDimension = mExampleDimension * (freeSpace/mTextWidth);
+            mTextPaint.setTextSize(mExampleDimension);
+            mTextWidth = mTextPaint.measureText(frontSideString);
+            mTextHeight = mTextPaint.getFontMetrics().bottom;
+        }
+        */
+        float x = paddingLeft + (contentWidth) / 2;
         float y = paddingTop + (contentHeight / 2 + mTextHeight);
         canvas.drawText(action.execute(), x, y, mTextPaint);
         // Draw the example drawable on top of the text.
@@ -137,16 +145,18 @@ public class DoublesideView extends View {
         // Вы ДОЛЖНЫ сделать вызов метода setMeasuredDimension,
         // иначе получится выброс исключения при
         // размещении элемента внутри разметки.
-        float freeSpace = measuredWidth - getPaddingLeft() - getPaddingRight();
-        cutFontSize(freeSpace, mTextWidth);
+
+        cutFontSize(measuredWidth);
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
-    private void cutFontSize(float freeSpace, float textWidth) {
-        if (freeSpace < textWidth){
-            mExampleDimension = mExampleDimension * freeSpace / textWidth * 0.99f;
+    private void cutFontSize(int measuredWidth) {
+        float freeSpace = measuredWidth - getPaddingLeft() - getPaddingRight();
+        if (freeSpace < mTextWidth){
+            mExampleDimension = mExampleDimension * freeSpace / mTextWidth;
             mTextPaint.setTextSize(mExampleDimension);
-            mTextWidth = mTextPaint.measureText(longestSting);
+            mTextWidth = freeSpace;
+            mTextHeight = mTextPaint.getFontMetrics().bottom;
         }
     }
 
@@ -183,9 +193,10 @@ public class DoublesideView extends View {
             // Если ваш элемент заполняет все доступное
             // пространство, верните внешнюю границу.
             //result = Math.round(mTextPaint.measureText(frontSideString))+getPaddingRight()+getPaddingLeft();
+            //frontSideString = frontSideString + specSize;
             result = Math.round(mTextWidth) + getPaddingLeft() + getPaddingRight();
-            if (result > maxWidth){
-                result = maxWidth;
+            if (result > specSize){
+                result = specSize;
             }
         } else if (specMode == MeasureSpec.EXACTLY) {
             // Если ваш элемент может поместиться внутри этих границ, верните это значение.
@@ -274,12 +285,38 @@ public class DoublesideView extends View {
     }
 
 
-    private class DoublesideViewOnClickListener implements OnClickListener {
+
         @Override
         public void onClick(View view) {
+            rotation1 = ObjectAnimator.ofFloat(view, "rotationY", 0, 90);
+            rotation1.setDuration(750);
+            rotation1.start();
+            rotation2 = ObjectAnimator.ofFloat(view, "rotationY", -90, 0);
+            rotation1.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+                }
 
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    action = action.getNext();
+                    invalidate();
+                    rotation2.setDuration(750);
+                    rotation2.start();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
         }
-    }
+
 
     private interface ICommand{
         String execute();
@@ -308,6 +345,7 @@ public class DoublesideView extends View {
 
         @Override
         public ICommand getNext() {
+            currentString = nextAction.execute();
             return nextAction;
         }
     }
