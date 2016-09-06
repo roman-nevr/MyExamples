@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.Display;
@@ -107,7 +108,7 @@ public class DoublesideView extends View implements View.OnClickListener {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //super.onDraw(canvas);
+        super.onDraw(canvas);
 
         // TODO: consider storing these as member variables to reduce
         // allocations per draw cycle.
@@ -132,6 +133,8 @@ public class DoublesideView extends View implements View.OnClickListener {
         float y = paddingTop + (contentHeight / 2 + mTextHeight);
         canvas.drawText(action.execute(), x, y, mTextPaint);
         // Draw the example drawable on top of the text.
+        NinePatchDrawable ninePatchDrawable = (NinePatchDrawable) getResources().getDrawable(R.drawable.np_test_9p);
+        ninePatchDrawable.draw(canvas);
         if (mExampleDrawable != null) {
             mExampleDrawable.setBounds(paddingLeft, paddingTop, paddingLeft + contentWidth, paddingTop + contentHeight);
             mExampleDrawable.draw(canvas);

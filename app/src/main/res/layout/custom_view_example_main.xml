@@ -7,7 +7,7 @@
     tools:context=".CustomViewExample">
 
     <ru.rubicon.myexamples.views.DoublesideView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="300dp"
         android:background="#ccc"
         android:paddingBottom="0dp"
