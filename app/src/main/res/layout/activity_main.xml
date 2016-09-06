@@ -44,6 +44,7 @@
         android:layout_height="wrap_content"
         android:text="@string/custom_view_name"
         android:id="@+id/btn_custom_view"
+        android:background="@drawable/np_test_9p"
         android:layout_below="@+id/btn_text_animation"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

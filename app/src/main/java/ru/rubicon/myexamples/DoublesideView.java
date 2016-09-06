@@ -120,15 +120,6 @@ public class DoublesideView extends View {
         int contentHeight = getHeight() - paddingTop - paddingBottom;
 
         // Draw the text.
-        /*
-        float freeSpace = getWidth()- getPaddingLeft() - getPaddingRight();
-        if (mTextWidth > freeSpace){
-            mExampleDimension = mExampleDimension * (freeSpace/mTextWidth);
-            mTextPaint.setTextSize(mExampleDimension);
-            mTextWidth = mTextPaint.measureText(frontSideString);
-            mTextHeight = mTextPaint.getFontMetrics().bottom;
-        }
-        */
         float x = paddingLeft + (contentWidth - mTextWidth) / 2;
         float y = paddingTop + (contentHeight / 2 + mTextHeight);
         canvas.drawText(action.execute(), x, y, mTextPaint);
