@@ -7,28 +7,29 @@
     tools:context=".CustomViewExample">
 
     <ru.rubicon.myexamples.views.DoublesideView
-        android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:background="#ccc"
-        android:paddingBottom="0dp"
-        android:paddingTop="0dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:paddingBottom="20dp"
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         app:exampleColor="@color/colorPrimary"
         app:exampleDimension="35dp"
-
+        app:exampleDrawable="@drawable/np_test"
         app:frontSideString="Hello, DoublesideView"
         app:backSideString="bye!"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:paddingLeft="20dp"
+        style="@style/AppTheme.ButtonShadow"
         android:text="New Button a very loooooooooooooong word"
         android:textSize="24dp"
         android:id="@+id/button" />
 
     <TextView
+        android:background="@drawable/np_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24dp"

@@ -3,11 +3,14 @@ package ru.rubicon.myexamples.views;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.NinePatch;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.text.TextPaint;
@@ -27,6 +30,7 @@ public class DoublesideView extends View implements View.OnClickListener {
     private int mExampleColor = Color.BLACK; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
+    private NinePatchDrawable ninePatchDrawable;
     private ICommand action;
     private SideAction frontSideAction, backSideAction;
     private ObjectAnimator rotation1, rotation2;
@@ -71,6 +75,10 @@ public class DoublesideView extends View implements View.OnClickListener {
             mExampleDrawable.setCallback(this);
         }
 
+        Resources resources = getContext().getResources();
+        ninePatchDrawable = (NinePatchDrawable) resources.getDrawable(R.drawable.np_test);
+        Rect rect = new Rect();
+        ninePatchDrawable.getPadding(rect);
         a.recycle();
 
         // Set up a default TextPaint object
@@ -119,6 +127,13 @@ public class DoublesideView extends View implements View.OnClickListener {
         int contentWidth = getWidth() - paddingLeft - paddingRight;
         int contentHeight = getHeight() - paddingTop - paddingBottom;
 
+
+        // Draw the example drawable on top of the text.
+        //NinePatchDrawable ninepatch = new NinePatchDrawable(R.drawable.np_test_9p, );
+        if (ninePatchDrawable != null) {
+            ninePatchDrawable.setBounds(0, 0, getWidth(), getHeight());
+            ninePatchDrawable.draw(canvas);
+        }
         // Draw the text.
         /*
         float freeSpace = getWidth()- getPaddingLeft() - getPaddingRight();
@@ -132,13 +147,6 @@ public class DoublesideView extends View implements View.OnClickListener {
         float x = paddingLeft + (contentWidth) / 2;
         float y = paddingTop + (contentHeight / 2 + mTextHeight);
         canvas.drawText(action.execute(), x, y, mTextPaint);
-        // Draw the example drawable on top of the text.
-        NinePatchDrawable ninePatchDrawable = (NinePatchDrawable) getResources().getDrawable(R.drawable.np_test_9p);
-        ninePatchDrawable.draw(canvas);
-        if (mExampleDrawable != null) {
-            mExampleDrawable.setBounds(paddingLeft, paddingTop, paddingLeft + contentWidth, paddingTop + contentHeight);
-            mExampleDrawable.draw(canvas);
-        }
     }
 
     @Override

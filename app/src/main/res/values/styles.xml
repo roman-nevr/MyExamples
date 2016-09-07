@@ -15,5 +15,9 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.ButtonShadow" parent="AppTheme">
+        <item name="android:background">@android:drawable/dialog_holo_light_frame</item>
+        <item name="android:padding">20dp</item>
+    </style>
 
 </resources>
