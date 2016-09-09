@@ -29,5 +29,13 @@
             android:name=".CustomViewExample"
             android:label="@string/custom_view_name">
         </activity>
+        <activity android:name=".RememberWords"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".Hero">
+
+        </activity>
     </application>
 </manifest>

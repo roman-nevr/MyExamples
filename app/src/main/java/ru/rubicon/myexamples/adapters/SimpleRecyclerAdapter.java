@@ -46,7 +46,6 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
 
         public SimpleViewHolder(View itemView) {
             super(itemView);
-
             cardView = (CardView) itemView.findViewById(R.id.cardView);
             cardView.setUseCompatPadding(true);
             titleTextView = (TextView) itemView.findViewById(R.id.card_textView_name);

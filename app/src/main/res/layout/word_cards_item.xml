@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/llMain"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ru.rubicon.myexamples.views.DoublesideView
+        android:layout_margin="30dp"
+        android:id="@+id/dw_word_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:frontSideString="hello"
+        app:backSideString="привет"/>
+
+</LinearLayout>
