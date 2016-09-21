@@ -10,7 +10,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnCoordinator;
-    private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords, btnHero;
+    private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords, btnHero, btnFlip;
 
 
     @Override
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         buttonSettings(btnCustomView, R.id.btn_custom_view, new CustomViewOnClickListener());
         buttonSettings(btnRememberWords, R.id.btn_remember_words, new WordCardsOnClickListener());
         buttonSettings(btnHero, R.id.btn_hero, new HeroOnClickListener());
+        buttonSettings(btnFlip, R.id.btn_flip_activity, new FlipActivityOnClickListener());
     }
 
     private void buttonSettings(Button btn, @IdRes int id, View.OnClickListener listener){
@@ -78,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, Hero.class);
+            startActivity(intent);
+        }
+    }
+    private class FlipActivityOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, FlipActivity.class);
             startActivity(intent);
         }
     }

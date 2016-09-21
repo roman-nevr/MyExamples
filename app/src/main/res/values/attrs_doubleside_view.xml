@@ -4,5 +4,6 @@
         <attr name="backSideString" format="string" />
         <attr name="exampleColor" format="color" />
         <attr name="exampleDrawable" format="color|reference" />
+        <attr name="textSize" format="dimension"/>
     </declare-styleable>
 </resources>

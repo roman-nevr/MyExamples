@@ -90,7 +90,7 @@ public class TextAnimationExample extends AppCompatActivity implements TextSwitc
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-                    btnTextAnimator.setText(word);
+                    //btnTextAnimator.setText(word);
                     action.execute();
                     action = action.getNext();
 
