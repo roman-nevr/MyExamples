@@ -37,7 +37,7 @@
             android:name=".Hero">
         </activity>
         <activity android:name=".FlipActivity">
-
         </activity>
+        <activity android:name=".PagerViewExample"/>
     </application>
 </manifest>

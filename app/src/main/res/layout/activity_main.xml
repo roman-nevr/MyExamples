@@ -66,9 +66,14 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
     <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Flip activity"
+    android:id="@+id/btn_flip_activity"/>
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Flip activity"
-        android:id="@+id/btn_flip_activity"/>
+        android:text="Pager View example"
+        android:id="@+id/btn_pager_view"/>
 
 </LinearLayout>

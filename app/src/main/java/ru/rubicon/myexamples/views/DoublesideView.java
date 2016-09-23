@@ -15,6 +15,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import ru.rubicon.myexamples.R;
 
@@ -37,9 +38,9 @@ public class DoublesideView extends View implements View.OnClickListener {
     int maxWidth, maxHeight;
     private Rect rect;
     private int symbolsNumber;
-    private ArrayList<String> textListToDraw;
+    private ArrayList<String> stringList;
 
-    private final static String ROTATION = "rotationY";
+    private final static String ROTATION = "rotationX";
 
     // Конструктор, необходимый для создания элемента внутри кода программы
     public DoublesideView(Context context) {
@@ -127,7 +128,7 @@ public class DoublesideView extends View implements View.OnClickListener {
             longestSting = backSideString;
         }
         Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
-        mTextHeight = ( - fontMetrics.top - fontMetrics.bottom) / 2;
+        mTextHeight = ( - fontMetrics.top + fontMetrics.bottom);
 
     }
 
@@ -141,8 +142,8 @@ public class DoublesideView extends View implements View.OnClickListener {
         int paddingTop = getPaddingTop();
         int paddingRight = getPaddingRight();
         int paddingBottom = getPaddingBottom();
-        int contentWidth = getWidth() - paddingLeft - paddingRight;
-        int contentHeight = getHeight() - paddingTop - paddingBottom;
+        int contentWidth = getWidth() - paddingLeft - paddingRight - rect.left - rect.right;
+        int contentHeight = getHeight() - paddingTop - paddingBottom - rect.top - rect.bottom;
 
 
         // Draw the example drawable on top of the text.
@@ -162,17 +163,76 @@ public class DoublesideView extends View implements View.OnClickListener {
         }
         */
         //symbolsNumber = mTextPaint.breakText(action.execute(), true, getWidth() - rect.right - rect.left, null);
-        float x = paddingLeft + (contentWidth) / 2;
+        //float x = paddingLeft + (contentWidth) / 2;
         //float y = paddingTop + (contentHeight / 2 + mTextHeight) /*+ 6*/;
-        float y = paddingTop + rect.top  - mTextPaint.getFontMetrics().top;
+        //float y = paddingTop + rect.top  - mTextPaint.getFontMetrics().top;
         //canvas.drawText(action.execute(), x, y, mTextPaint);
-        canvas.drawText(action.execute(),  x, y, mTextPaint);
+        //canvas.drawText(action.execute(),  x, y, mTextPaint);
+        //ArrayList<String> stringList = breakStringToDraw(frontSideString, mTextPaint, contentWidth);
+        //drawMultilineText(stringList, canvas, mTextPaint, )
+        stringList = breakStringToDraw(action.execute(), mTextPaint, contentWidth);
+        float startX = paddingLeft + rect.left + (contentWidth) / 2;
+        //float startY = paddingTop + rect.top  - mTextPaint.getFontMetrics().top;
+        float top = - mTextPaint.getFontMetrics().top;
+        float bottom = mTextPaint.getFontMetrics().bottom;
+        float leading = mTextPaint.getFontMetrics().leading;
+        float startY = paddingTop + rect.top + contentHeight/2 - (top + bottom)*((stringList.size()-1)/2.0f) +
+                (top - bottom)/2f;
+
+        for(int rowNumber = 0; rowNumber < stringList.size(); rowNumber++){
+            canvas.drawText(stringList.get(rowNumber),  startX, startY +
+                    (bottom + leading + top) * rowNumber, mTextPaint);
+        }
+    }
+
+    /**
+     * Gets the arrayList of Strings which can be shown in multiple rows
+     *
+     * @param string The source string
+     * @param textPaint params of font
+     *
+     * @return The arrayList of Strings
+     */
+    private ArrayList<String> breakStringToDraw(String string, TextPaint textPaint, float width){
+        ArrayList<String> result = new ArrayList<String>();
+        boolean finish = false;
+        int pointer = 0;
+        while (!finish){
+            //if next substring starts with space
+            while ((pointer < string.length()) &&(string.charAt(pointer) == ' ')){
+                pointer++;
+            }//so string starts without space
+            int number = textPaint.breakText(string.substring(pointer), true, width, null);
+            if ((pointer + number) != string.length()){
+                String substring = string.substring(pointer , pointer + number);
+                //if string ends with space
+                int lastIndex = substring.lastIndexOf(" ");
+                int end = lastIndex;
+                if (lastIndex != -1){
+                    while((substring.charAt(lastIndex) == ' ')&&(lastIndex > 0)){
+                        lastIndex--;
+                    }
+                    //add startspacefree string to result
+                    result.add(string.substring(pointer, pointer + lastIndex));
+                    //move pointer to the end of substring
+                    pointer = pointer +end + 1;
+                } else {
+                    result.add(substring);
+                    pointer = pointer + substring.length();
+                }
+            } else {
+                result.add(string.substring(pointer, pointer + number));
+                finish = true;
+            }
+
+        }
+        return result;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int measuredHeight = measureHeight(heightMeasureSpec);
         int measuredWidth = measureWidth(widthMeasureSpec);
+        int measuredHeight = measureHeight(heightMeasureSpec);
         // Вы ДОЛЖНЫ сделать вызов метода setMeasuredDimension,
         // иначе получится выброс исключения при
         // размещении элемента внутри разметки.
@@ -181,7 +241,7 @@ public class DoublesideView extends View implements View.OnClickListener {
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
-    private void cutFontSize(int measuredWidth) {
+    /*private void cutFontSize(int measuredWidth) {
         float freeSpace = measuredWidth - getPaddingLeft() - getPaddingRight();
         if (freeSpace < mTextWidth){
             textSize = textSize * freeSpace / mTextWidth;
@@ -189,7 +249,7 @@ public class DoublesideView extends View implements View.OnClickListener {
             mTextWidth = freeSpace;
             mTextHeight = mTextPaint.getFontMetrics().bottom;
         }
-    }
+    }*/
 
     private int measureHeight(int measureSpec) {
         int specMode = MeasureSpec.getMode(measureSpec);
@@ -197,14 +257,14 @@ public class DoublesideView extends View implements View.OnClickListener {
         // Размер по умолчанию, если ограничения не были установлены.
         int result = 500;
 
-        if (specMode == MeasureSpec.AT_MOST) {
+        if ((specMode == MeasureSpec.AT_MOST)||(specMode == MeasureSpec.UNSPECIFIED)) {
             //wrap content
             // Рассчитайте идеальный размер вашего
             // элемента в рамках максимальных значений.
             // Если ваш элемент заполняет все доступное
             // пространство, верните внешнюю границу.
             //result = Math.round(mTextPaint.getFontMetrics().top+mTextPaint.getFontMetrics().bottom);
-            result = Math.round(mTextHeight - mTextPaint.getFontMetrics().top) + getPaddingBottom()
+            result = Math.round(stringList.size()*(mTextHeight + mTextPaint.getFontMetrics().leading*(stringList.size()-1))) + getPaddingBottom()
                     + getPaddingTop() + rect.top + rect.bottom;
 
         } else if (specMode == MeasureSpec.EXACTLY) {
@@ -234,6 +294,7 @@ public class DoublesideView extends View implements View.OnClickListener {
             // Если ваш элемент может поместиться внутри этих границ, верните это значение.
             result = specSize;
         }
+        stringList = breakStringToDraw(longestSting, mTextPaint, result - rect.left - rect.right-getPaddingLeft()-getPaddingRight());
         return result;
     }
     /**

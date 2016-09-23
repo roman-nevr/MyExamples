@@ -45,6 +45,7 @@ public class WordCardsAdapter extends RecyclerView.Adapter<WordCardsAdapter.Card
         public CardsViewHolder(View itemView) {
             super(itemView);
             doublesideView = (DoublesideView) itemView.findViewById(R.id.dw_word_card);
+            doublesideView.setRotationTime(500);
         }
     }
 

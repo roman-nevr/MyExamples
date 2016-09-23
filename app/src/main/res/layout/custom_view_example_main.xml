@@ -13,39 +13,37 @@
         android:paddingTop="0dp"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        app:frontSideString="hello111111111111111"
+        app:frontSideString="hello11111111111111      ffffffffffdddddddddddddddddddddddddddddddddddddddddddddddddddddddffffff"
         app:textSize="32dp"
-        app:backSideString="bye!"
+        app:backSideString="bye!         bye         bye!        bye    bye "
         app:exampleColor="@color/colorAccent"
         />
 
     <Button
         android:background="@drawable/np_test2"
-        android:padding="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:textSize="24dp"
+        android:text=""
+        android:textSize="12dp"
         android:id="@+id/button" />
 
     <TextView
         android:background="@android:drawable/dialog_holo_light_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="40dp"
-        android:paddingBottom="0dp"
-        android:textSize="24dp"
-        android:text="y111111111111l"/>
+        android:textSize="12dp"
+        android:text="hello111111ggggggg"/>
 
     <TextView
         android:background="@drawable/np_test2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
+        android:textAlignment="center"
         android:paddingTop="0dp"
-        android:textSize="24dp"
+        android:textSize="32dp"
         android:id="@+id/editText"
-        android:text="11111111111111111111111111l"/>
+        android:text="hello11111111111111      ffffffffffdddddddddddddddddddddddddddddddddddddddddddddddddddddddffffff"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,19 +53,9 @@
             android:layout_height="wrap_content"
             android:paddingTop="0dp"
             app:textSize="48dp"
+            app:backSideString="hello world loooooooong"
             app:frontSideString="1111y"/>
-        <ru.rubicon.myexamples.views.DoublesideView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="0dp"
-            app:textSize="48dp"
-            app:frontSideString="1111y"/>
-        <ru.rubicon.myexamples.views.DoublesideView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="0dp"
-            app:textSize="48dp"
-            app:frontSideString="1111y"/>
+
     </LinearLayout>
 
 </LinearLayout>

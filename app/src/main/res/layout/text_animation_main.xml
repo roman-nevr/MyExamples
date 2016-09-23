@@ -7,7 +7,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello11111111111111"
+        android:text="Hello111111111111"
         android:id="@+id/btn_text_animation"
         android:textSize="32dp"
         android:layout_gravity="center_horizontal"

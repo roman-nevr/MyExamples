@@ -10,7 +10,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnCoordinator;
-    private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords, btnHero, btnFlip;
+    private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords, btnHero, btnFlip, btnPagerView;
 
 
     @Override
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         buttonSettings(btnRememberWords, R.id.btn_remember_words, new WordCardsOnClickListener());
         buttonSettings(btnHero, R.id.btn_hero, new HeroOnClickListener());
         buttonSettings(btnFlip, R.id.btn_flip_activity, new FlipActivityOnClickListener());
+        buttonSettings(btnPagerView, R.id.btn_pager_view, new PagerViewActivityOnClickListener());
     }
 
     private void buttonSettings(Button btn, @IdRes int id, View.OnClickListener listener){
@@ -89,6 +90,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+    private class PagerViewActivityOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, PagerViewExample.class);
+            startActivity(intent);
+        }
+    }
+
 
 
 }
