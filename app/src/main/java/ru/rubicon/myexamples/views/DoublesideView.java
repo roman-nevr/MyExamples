@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,7 @@ import android.graphics.drawable.NinePatchDrawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,6 +115,13 @@ public class DoublesideView extends View implements View.OnClickListener {
         currentString = frontSideString;
         // Update TextPaint and text measurements from attributes
         invalidateTextPaintAndMeasurements();
+
+       /* ViewOutlineProvider provider = new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.set
+            }
+        }*/
     }
 
     private void invalidateTextPaintAndMeasurements() {
