@@ -14,7 +14,7 @@
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:elevation="40dp"
-        app:frontSideString="hello11111111111111      ffffffffffdddddddddddddddddddddddddddddddddddddddddddddddddddddddffffff"
+        app:frontSideString="hello111111ddddffffff"
         app:textSize="32dp"
         app:backSideString="bye!         bye         bye!        bye    bye "
         app:exampleColor="@color/colorAccent"
@@ -27,14 +27,6 @@
         android:text=""
         android:textSize="12dp"
         android:id="@+id/button" />
-
-    <TextView
-        android:background="@drawable/buble_test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:elevation="10dp"
-        android:textSize="24dp"
-        android:text="hello111111ggggggg"/>
     <!--
         <TextView
             android:background="@drawable/np_test2"
@@ -59,9 +51,11 @@
                 app:frontSideString="1111y"/>
 
         </LinearLayout> -->
+    <ru.rubicon.myexamples.views.CustowTextEdit
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <ru.rubicon.myexamples.views.PixelView
-        android:layout_width="200dp"
-        android:layout_height="50dp"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

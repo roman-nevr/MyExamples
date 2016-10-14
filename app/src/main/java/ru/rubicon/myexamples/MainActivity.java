@@ -27,11 +27,20 @@ public class MainActivity extends AppCompatActivity {
         buttonSettings(btnHero, R.id.btn_hero, new HeroOnClickListener());
         buttonSettings(btnFlip, R.id.btn_flip_activity, new FlipActivityOnClickListener());
         buttonSettings(btnPagerView, R.id.btn_pager_view, new PagerViewActivityOnClickListener());
+
+
     }
 
     private void buttonSettings(Button btn, @IdRes int id, View.OnClickListener listener){
         btn = (Button) findViewById(id);
         btn.setOnClickListener(listener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = new Intent(MainActivity.this, CustomViewExample.class);
+        startActivity(intent);
     }
 
     private class CoordinatorOnClickListener implements View.OnClickListener{
