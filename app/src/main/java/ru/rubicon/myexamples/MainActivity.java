@@ -9,7 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnCoordinator;
+    private Button btnCoordinator, btnBarCode;
     private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords, btnHero, btnFlip, btnPagerView;
 
 
@@ -27,20 +27,12 @@ public class MainActivity extends AppCompatActivity {
         buttonSettings(btnHero, R.id.btn_hero, new HeroOnClickListener());
         buttonSettings(btnFlip, R.id.btn_flip_activity, new FlipActivityOnClickListener());
         buttonSettings(btnPagerView, R.id.btn_pager_view, new PagerViewActivityOnClickListener());
-
-
+        buttonSettings(btnBarCode, R.id.btn_barc_code, new BarCodeActivityOnClickListener());
     }
 
     private void buttonSettings(Button btn, @IdRes int id, View.OnClickListener listener){
         btn = (Button) findViewById(id);
         btn.setOnClickListener(listener);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Intent intent = new Intent(MainActivity.this, CustomViewExample.class);
-        startActivity(intent);
     }
 
     private class CoordinatorOnClickListener implements View.OnClickListener{
@@ -56,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(MainActivity.this, CardScroll.class);
+            Intent intent = new Intent(MainActivity.this, CardScrollDocs.class);
             startActivity(intent);
         }
     }
@@ -103,6 +95,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, PagerViewExample.class);
+            startActivity(intent);
+        }
+    }
+    private class BarCodeActivityOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, BarCode.class);
             startActivity(intent);
         }
     }
