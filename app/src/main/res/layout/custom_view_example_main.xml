@@ -13,24 +13,49 @@
         android:paddingTop="0dp"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        app:exampleColor="@color/colorPrimary"
-        app:exampleDrawable="@drawable/np_test"
-
+        android:elevation="40dp"
+        app:frontSideString="hello111111ddddffffff"
+        app:textSize="32dp"
+        app:backSideString="bye!         bye         bye!        bye    bye "
+        app:exampleColor="@color/colorAccent"
         />
 
     <Button
-        android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:text="New Button"
-        android:textSize="24dp"
-        android:id="@+id/button" />
-
-    <TextView
-        android:background="@drawable/np_test"
+        android:background="@drawable/np_test2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24dp"
-        android:id="@+id/editText"
-        android:text="New Button a very loooooooooooooong word"/>
+        android:text=""
+        android:textSize="12dp"
+        android:id="@+id/button" />
+    <!--
+        <TextView
+            android:background="@drawable/np_test2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:textAlignment="center"
+            android:paddingTop="0dp"
+            android:textSize="32dp"
+            android:id="@+id/editText"
+            android:text="hello11111111111111      ffffffffffdddddddddddddddddddddddddddddddddddddddddddddddddddddddffffff"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ru.rubicon.myexamples.views.DoublesideView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="0dp"
+                app:textSize="48dp"
+                app:backSideString="hello world loooooooong"
+                app:frontSideString="1111y"/>
+
+        </LinearLayout> -->
+    <ru.rubicon.myexamples.views.CustowTextEdit
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <ru.rubicon.myexamples.views.PixelView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

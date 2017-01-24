@@ -9,8 +9,8 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button btnCoordinator;
-    private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords, btnHero;
+    private Button btnCoordinator, btnBarCode;
+    private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords, btnHero, btnFlip, btnPagerView;
 
 
     @Override
@@ -25,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
         buttonSettings(btnCustomView, R.id.btn_custom_view, new CustomViewOnClickListener());
         buttonSettings(btnRememberWords, R.id.btn_remember_words, new WordCardsOnClickListener());
         buttonSettings(btnHero, R.id.btn_hero, new HeroOnClickListener());
+        buttonSettings(btnFlip, R.id.btn_flip_activity, new FlipActivityOnClickListener());
+        buttonSettings(btnPagerView, R.id.btn_pager_view, new PagerViewActivityOnClickListener());
+        buttonSettings(btnBarCode, R.id.btn_barc_code, new BarCodeActivityOnClickListener());
     }
 
     private void buttonSettings(Button btn, @IdRes int id, View.OnClickListener listener){
@@ -45,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(MainActivity.this, CardScroll.class);
+            Intent intent = new Intent(MainActivity.this, CardScrollDocs.class);
             startActivity(intent);
         }
     }
@@ -81,6 +84,28 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+    private class FlipActivityOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, FlipActivity.class);
+            startActivity(intent);
+        }
+    }
+    private class PagerViewActivityOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, PagerViewExample.class);
+            startActivity(intent);
+        }
+    }
+    private class BarCodeActivityOnClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, BarCode.class);
+            startActivity(intent);
+        }
+    }
+
 
 
 }

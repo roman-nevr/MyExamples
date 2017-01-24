@@ -3,10 +3,10 @@ package ru.rubicon.myexamples.views;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -14,6 +14,10 @@ import android.graphics.drawable.NinePatchDrawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewOutlineProvider;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import ru.rubicon.myexamples.R;
 
@@ -23,7 +27,7 @@ import ru.rubicon.myexamples.R;
 public class DoublesideView extends View implements View.OnClickListener {
     private String frontSideString, backSideString, longestSting, currentString; // TODO: use a default from R.string...
     private int mExampleColor = Color.BLACK; // TODO: use a default from R.color...
-    private float mExampleDimension = 0; // TODO: use a default from R.dimen...
+    private float textSize; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
     private NinePatchDrawable ninePatchDrawable;
     private ICommand action;
@@ -36,6 +40,9 @@ public class DoublesideView extends View implements View.OnClickListener {
     int maxWidth, maxHeight;
     private Rect rect;
     private int symbolsNumber;
+    private ArrayList<String> stringList;
+
+    private final static String ROTATION = "rotationX";
 
     // Конструктор, необходимый для создания элемента внутри кода программы
     public DoublesideView(Context context) {
@@ -80,15 +87,22 @@ public class DoublesideView extends View implements View.OnClickListener {
             mExampleDrawable.setCallback(this);
         }
 
-        Resources resources = getContext().getResources();
-        //mExampleDimension = resources.getDimension()
-        ninePatchDrawable = (NinePatchDrawable) resources.getDrawable(R.drawable.np_test);
+        if (a.hasValue(R.styleable.DoublesideView_textSize)){
+            textSize = a.getDimension(R.styleable.DoublesideView_textSize, 30f);
+        } else {
+            textSize = 30f;
+        }
+
+        //Resources resources = getContext().getResources();
+        //textSize = resources.getDimension()
+        ninePatchDrawable = (NinePatchDrawable) getContext().getResources().getDrawable(R.drawable.np_test2);
         rect = new Rect();
         ninePatchDrawable.getPadding(rect);
         a.recycle();
 
         // Set up a default TextPaint object
         mTextPaint = new TextPaint();
+        mTextPaint.setTextSize(textSize);
         mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 
@@ -101,10 +115,17 @@ public class DoublesideView extends View implements View.OnClickListener {
         currentString = frontSideString;
         // Update TextPaint and text measurements from attributes
         invalidateTextPaintAndMeasurements();
+
+       /* ViewOutlineProvider provider = new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                outline.set
+            }
+        }*/
     }
 
     private void invalidateTextPaintAndMeasurements() {
-        mTextPaint.setTextSize(mExampleDimension);
+        mTextPaint.setTextSize(textSize);
         mTextPaint.setColor(mExampleColor);
         float frontSideStringWidth = mTextPaint.measureText(frontSideString);
         float backSideStringWidth = mTextPaint.measureText(backSideString);
@@ -116,7 +137,7 @@ public class DoublesideView extends View implements View.OnClickListener {
             longestSting = backSideString;
         }
         Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
-        mTextHeight = fontMetrics.bottom;
+        mTextHeight = ( - fontMetrics.top + fontMetrics.bottom);
 
     }
 
@@ -130,8 +151,8 @@ public class DoublesideView extends View implements View.OnClickListener {
         int paddingTop = getPaddingTop();
         int paddingRight = getPaddingRight();
         int paddingBottom = getPaddingBottom();
-        int contentWidth = getWidth() - paddingLeft - paddingRight;
-        int contentHeight = getHeight() - paddingTop - paddingBottom;
+        int contentWidth = getWidth() - paddingLeft - paddingRight - rect.left - rect.right;
+        int contentHeight = getHeight() - paddingTop - paddingBottom - rect.top - rect.bottom;
 
 
         // Draw the example drawable on top of the text.
@@ -144,23 +165,83 @@ public class DoublesideView extends View implements View.OnClickListener {
         /*
         float freeSpace = getWidth()- getPaddingLeft() - getPaddingRight();
         if (mTextWidth > freeSpace){
-            mExampleDimension = mExampleDimension * (freeSpace/mTextWidth);
-            mTextPaint.setTextSize(mExampleDimension);
+            textSize = textSize * (freeSpace/mTextWidth);
+            mTextPaint.setTextSize(textSize);
             mTextWidth = mTextPaint.measureText(frontSideString);
             mTextHeight = mTextPaint.getFontMetrics().bottom;
         }
         */
-        symbolsNumber = mTextPaint.breakText(action.execute(), true, getWidth() - rect.right - rect.left, null);
-        float x = paddingLeft + (contentWidth) / 2;
-        float y = paddingTop + (contentHeight / 2 + mTextHeight);
+        //symbolsNumber = mTextPaint.breakText(action.execute(), true, getWidth() - rect.right - rect.left, null);
+        //float x = paddingLeft + (contentWidth) / 2;
+        //float y = paddingTop + (contentHeight / 2 + mTextHeight) /*+ 6*/;
+        //float y = paddingTop + rect.top  - mTextPaint.getFontMetrics().top;
         //canvas.drawText(action.execute(), x, y, mTextPaint);
-        canvas.drawText(action.execute(), 0, symbolsNumber, x, y, mTextPaint);
+        //canvas.drawText(action.execute(),  x, y, mTextPaint);
+        //ArrayList<String> stringList = breakStringToDraw(frontSideString, mTextPaint, contentWidth);
+        //drawMultilineText(stringList, canvas, mTextPaint, )
+        stringList = breakStringToDraw(action.execute(), mTextPaint, contentWidth);
+        float startX = paddingLeft + rect.left + (contentWidth) / 2;
+        //float startY = paddingTop + rect.top  - mTextPaint.getFontMetrics().top;
+        float top = - mTextPaint.getFontMetrics().top;
+        float bottom = mTextPaint.getFontMetrics().bottom;
+        float leading = mTextPaint.getFontMetrics().leading;
+        float startY = paddingTop + rect.top + contentHeight/2 - (top + bottom)*((stringList.size()-1)/2.0f) +
+                (top - bottom)/2f;
+
+        for(int rowNumber = 0; rowNumber < stringList.size(); rowNumber++){
+            canvas.drawText(stringList.get(rowNumber),  startX, startY +
+                    (bottom + leading + top) * rowNumber, mTextPaint);
+        }
+    }
+
+    /**
+     * Gets the arrayList of Strings which can be shown in multiple rows
+     *
+     * @param string The source string
+     * @param textPaint params of font
+     *
+     * @return The arrayList of Strings
+     */
+    private ArrayList<String> breakStringToDraw(String string, TextPaint textPaint, float width){
+        ArrayList<String> result = new ArrayList<String>();
+        boolean finish = false;
+        int pointer = 0;
+        while (!finish){
+            //if next substring starts with space
+            while ((pointer < string.length()) &&(string.charAt(pointer) == ' ')){
+                pointer++;
+            }//so string starts without space
+            int number = textPaint.breakText(string.substring(pointer), true, width, null);
+            if ((pointer + number) != string.length()){
+                String substring = string.substring(pointer , pointer + number);
+                //if string ends with space
+                int lastIndex = substring.lastIndexOf(" ");
+                int end = lastIndex;
+                if (lastIndex != -1){
+                    while((substring.charAt(lastIndex) == ' ')&&(lastIndex > 0)){
+                        lastIndex--;
+                    }
+                    //add startspacefree string to result
+                    result.add(string.substring(pointer, pointer + lastIndex));
+                    //move pointer to the end of substring
+                    pointer = pointer +end + 1;
+                } else {
+                    result.add(substring);
+                    pointer = pointer + substring.length();
+                }
+            } else {
+                result.add(string.substring(pointer, pointer + number));
+                finish = true;
+            }
+
+        }
+        return result;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int measuredHeight = measureHeight(heightMeasureSpec);
         int measuredWidth = measureWidth(widthMeasureSpec);
+        int measuredHeight = measureHeight(heightMeasureSpec);
         // Вы ДОЛЖНЫ сделать вызов метода setMeasuredDimension,
         // иначе получится выброс исключения при
         // размещении элемента внутри разметки.
@@ -169,15 +250,15 @@ public class DoublesideView extends View implements View.OnClickListener {
         setMeasuredDimension(measuredWidth, measuredHeight);
     }
 
-    private void cutFontSize(int measuredWidth) {
+    /*private void cutFontSize(int measuredWidth) {
         float freeSpace = measuredWidth - getPaddingLeft() - getPaddingRight();
         if (freeSpace < mTextWidth){
-            mExampleDimension = mExampleDimension * freeSpace / mTextWidth;
-            mTextPaint.setTextSize(mExampleDimension);
+            textSize = textSize * freeSpace / mTextWidth;
+            mTextPaint.setTextSize(textSize);
             mTextWidth = freeSpace;
             mTextHeight = mTextPaint.getFontMetrics().bottom;
         }
-    }
+    }*/
 
     private int measureHeight(int measureSpec) {
         int specMode = MeasureSpec.getMode(measureSpec);
@@ -185,14 +266,14 @@ public class DoublesideView extends View implements View.OnClickListener {
         // Размер по умолчанию, если ограничения не были установлены.
         int result = 500;
 
-        if (specMode == MeasureSpec.AT_MOST) {
+        if ((specMode == MeasureSpec.AT_MOST)||(specMode == MeasureSpec.UNSPECIFIED)) {
             //wrap content
             // Рассчитайте идеальный размер вашего
             // элемента в рамках максимальных значений.
             // Если ваш элемент заполняет все доступное
             // пространство, верните внешнюю границу.
             //result = Math.round(mTextPaint.getFontMetrics().top+mTextPaint.getFontMetrics().bottom);
-            result = Math.round(mTextHeight - mTextPaint.getFontMetrics().top) + getPaddingBottom()
+            result = Math.round(stringList.size()*(mTextHeight + mTextPaint.getFontMetrics().leading*(stringList.size()-1))) + getPaddingBottom()
                     + getPaddingTop() + rect.top + rect.bottom;
 
         } else if (specMode == MeasureSpec.EXACTLY) {
@@ -222,28 +303,15 @@ public class DoublesideView extends View implements View.OnClickListener {
             // Если ваш элемент может поместиться внутри этих границ, верните это значение.
             result = specSize;
         }
+        stringList = breakStringToDraw(longestSting, mTextPaint, result - rect.left - rect.right-getPaddingLeft()-getPaddingRight());
         return result;
     }
-
-    /**
-     * Gets the example string attribute value.
-     *
-     * @return The example string attribute value.
-     */
-    public String getExampleString() {
-        return frontSideString;
-    }
-
     /**
      * Sets the view's example string attribute value. In the example view, this string
      * is the text to draw.
      *
      * @param exampleString The example string attribute value to use.
      */
-    public void setExampleString(String exampleString) {
-        frontSideString = exampleString;
-        invalidateTextPaintAndMeasurements();
-    }
 
     /**
      * Gets the example color attribute value.
@@ -270,18 +338,18 @@ public class DoublesideView extends View implements View.OnClickListener {
      *
      * @return The example dimension attribute value.
      */
-    public float getExampleDimension() {
-        return mExampleDimension;
+    public float getTextSize() {
+        return textSize;
     }
 
     /**
      * Sets the view's example dimension attribute value. In the example view, this dimension
      * is the font size.
      *
-     * @param exampleDimension The example dimension attribute value to use.
+     * @param textSize The example dimension attribute value to use.
      */
-    public void setExampleDimension(float exampleDimension) {
-        mExampleDimension = exampleDimension;
+    public void setTextSize(float textSize) {
+        this.textSize = textSize;
         invalidateTextPaintAndMeasurements();
     }
 
@@ -290,9 +358,6 @@ public class DoublesideView extends View implements View.OnClickListener {
      *
      * @return The example drawable attribute value.
      */
-    public Drawable getExampleDrawable() {
-        return mExampleDrawable;
-    }
 
     public String getFrontSideString() {
         return frontSideString;
@@ -317,10 +382,10 @@ public class DoublesideView extends View implements View.OnClickListener {
 
     @Override
         public void onClick(View view) {
-            rotation1 = ObjectAnimator.ofFloat(view, "rotationY", 0, 90);
+            rotation1 = ObjectAnimator.ofFloat(view, ROTATION, 0, 90);
             rotation1.setDuration(rotationTime / 2);
             rotation1.start();
-            rotation2 = ObjectAnimator.ofFloat(view, "rotationY", -90, 0);
+            rotation2 = ObjectAnimator.ofFloat(view, ROTATION, -90, 0);
             rotation1.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
