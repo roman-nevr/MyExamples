@@ -10,7 +10,8 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnCoordinator, btnBarCode;
-    private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords, btnHero, btnFlip, btnPagerView;
+    private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords,
+            btnHero, btnFlip, btnPagerView, btnDragNDrop;
 
 
     @Override
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         buttonSettings(btnFlip, R.id.btn_flip_activity, new FlipActivityOnClickListener());
         buttonSettings(btnPagerView, R.id.btn_pager_view, new PagerViewActivityOnClickListener());
         buttonSettings(btnBarCode, R.id.btn_barc_code, new BarCodeActivityOnClickListener());
+        buttonSettings(btnDragNDrop, R.id.btn_drag_n_drop, new DragNDropOnClickListener());
     }
 
     private void buttonSettings(Button btn, @IdRes int id, View.OnClickListener listener){
@@ -102,6 +104,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, BarCode.class);
+            startActivity(intent);
+        }
+    }
+
+    private class DragNDropOnClickListener implements View.OnClickListener{
+        @Override public void onClick(View v) {
+            Intent intent = new Intent(MainActivity.this, DragNDropActivity.class);
             startActivity(intent);
         }
     }
