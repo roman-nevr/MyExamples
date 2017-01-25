@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LinearLayout llMain = (LinearLayout) findViewById(R.id.ll_main);
 
         btnCoordinator = (Button) findViewById(R.id.btn_coordinator);
         btnCoordinator.setOnClickListener(new CoordinatorOnClickListener());

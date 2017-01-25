@@ -1,5 +1,6 @@
 package ru.rubicon.myexamples;
 
+import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -25,6 +28,8 @@ import java.util.List;
 
 import ru.rubicon.myexamples.adapters.CameraPreview;
 
+import static android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK;
+
 /**
  * Created by Admin on 10.01.2017.
  */
@@ -35,6 +40,7 @@ public class BarCode extends AppCompatActivity implements SurfaceHolder.Callback
     private SurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
     private boolean mIsPreviewing = false;;
+    private Camera.Parameters parameters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +95,13 @@ public class BarCode extends AppCompatActivity implements SurfaceHolder.Callback
                 }
             }
         });
+
+        mSurfaceView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                autoFocus(Camera.Parameters.FOCUS_MODE_MACRO);
+            }
+        });
     }
 
     @Override
@@ -103,12 +116,39 @@ public class BarCode extends AppCompatActivity implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        int camera = CAMERA_FACING_BACK;
         // TODO Auto-generated method stub
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            mCamera = Camera.open(0);
+            mCamera = Camera.open(camera);
         } else {
             mCamera = Camera.open();
         }
+        setCameraDisplayOrientation(camera, mCamera);
+    }
+
+    private void setCameraDisplayOrientation(int cameraId, android.hardware.Camera camera) {
+        android.hardware.Camera.CameraInfo info =
+                new android.hardware.Camera.CameraInfo();
+        android.hardware.Camera.getCameraInfo(cameraId, info);
+        int rotation = getWindowManager().getDefaultDisplay()
+                .getRotation();
+        int degrees = 0;
+        switch (rotation) {
+            case Surface.ROTATION_0: degrees = 0; break;
+            case Surface.ROTATION_90: degrees = 90; break;
+            case Surface.ROTATION_180: degrees = 180; break;
+            case Surface.ROTATION_270: degrees = 270; break;
+        }
+
+        int result;
+        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            result = (info.orientation + degrees) % 360;
+            result = (360 - result) % 360;  // compensate the mirror
+        } else {  // back-facing
+            result = (info.orientation - degrees + 360) % 360;
+        }
+        System.out.println(result);
+        camera.setDisplayOrientation(result);
     }
 
     @Override
@@ -123,30 +163,24 @@ public class BarCode extends AppCompatActivity implements SurfaceHolder.Callback
         if (mCamera != null) {
             // узнаем параметры для наилучшего размера предварительного
             // просмотра
-            Camera.Parameters parameters = mCamera.getParameters();
+            parameters = mCamera.getParameters();
             Camera.Size bestSize = getNaturalPreviewSize(width, height, parameters);
 
             if (bestSize != null) {
-                parameters.setPreviewSize(width, height);
+                parameters.setPreviewSize(bestSize.width, bestSize.height);
                 mCamera.setParameters(parameters);
 
                 Toast.makeText(
                         getApplicationContext(),
-                        "Оптимальный размер: " + String.valueOf(bestSize.width)
-                                + " : " + String.valueOf(bestSize.height),
+                        "Установлен размер: " + bestSize.width
+                                + " : " + bestSize.height,
                         Toast.LENGTH_LONG).show();
             }
             try {
                 mCamera.setPreviewDisplay(mSurfaceHolder);
                 mCamera.startPreview();
                 mIsPreviewing = true;
-
-                mCamera.autoFocus(new Camera.AutoFocusCallback() {
-                    @Override
-                    public void onAutoFocus(boolean success, Camera camera) {
-
-                    }
-                });
+                //autoFocus(Camera.Parameters.FOCUS_MODE_MACRO);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -154,19 +188,26 @@ public class BarCode extends AppCompatActivity implements SurfaceHolder.Callback
         }
     }
 
-    private Camera.Size getBestPreviewSize(int width, int height,
-                                           Camera.Parameters parameters) {
-        Camera.Size bestSize = null;
-        List<Camera.Size> sizeList = parameters.getSupportedPreviewSizes();
+    private void autoFocus(String autoFocusMode){
+        if (parameters.getSupportedFocusModes().contains(autoFocusMode)) {
+            parameters.setFocusMode(autoFocusMode);
 
-        bestSize = sizeList.get(0);
-
-        for (int i = 1; i < sizeList.size(); i++) {
-            if ((sizeList.get(i).width * sizeList.get(i).height) > (bestSize.width * bestSize.height)) {
-                bestSize = sizeList.get(i);
-            }
+            mCamera.autoFocus(new Camera.AutoFocusCallback() {
+                public void onAutoFocus(boolean success, Camera camera) {
+                    // TODO Использовать значение success
+                    if(success){
+                        toast("AutoFocus");
+                    }
+                }
+            });
         }
-        return bestSize;
+    }
+
+    private void toast(String message){
+        Toast.makeText(
+                getApplicationContext(),
+                message,
+                Toast.LENGTH_LONG).show();
     }
 
     private Camera.Size getNaturalPreviewSize(int width, int height,
@@ -194,6 +235,4 @@ public class BarCode extends AppCompatActivity implements SurfaceHolder.Callback
             mIsPreviewing = false;
         }
     }
-
-
 }
