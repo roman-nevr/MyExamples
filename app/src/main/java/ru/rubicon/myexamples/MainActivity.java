@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btnCoordinator, btnBarCode;
     private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords,
-            btnHero, btnFlip, btnPagerView, btnDragNDrop;
+            btnHero, btnFlip, btnPagerView, btnDragNDrop, btnYoutube;
 
 
     @Override
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         buttonSettings(btnPagerView, R.id.btn_pager_view, new PagerViewActivityOnClickListener());
         buttonSettings(btnBarCode, R.id.btn_barc_code, new BarCodeActivityOnClickListener());
         buttonSettings(btnDragNDrop, R.id.btn_drag_n_drop, new DragNDropOnClickListener());
+        buttonSettings(btnYoutube, R.id.btn_youtube, new YoutubeOnClickListener());
     }
 
     private void buttonSettings(Button btn, @IdRes int id, View.OnClickListener listener){
@@ -111,6 +112,13 @@ public class MainActivity extends AppCompatActivity {
     private class DragNDropOnClickListener implements View.OnClickListener{
         @Override public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, DragNDropActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    private class YoutubeOnClickListener implements View.OnClickListener{
+        @Override public void onClick(View v) {
+            Intent intent = new Intent(MainActivity.this, YoutubeApi.class);
             startActivity(intent);
         }
     }

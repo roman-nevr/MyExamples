@@ -39,6 +39,4 @@ public class BehavorTouchHelper extends ItemTouchHelper.SimpleCallback {
         //System.out.println("dirs: " + dirs + ", string: " + viewHolder.getAdapterPosition());
         return dirs;
     }
-
-
 }

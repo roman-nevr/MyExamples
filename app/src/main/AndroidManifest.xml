@@ -48,5 +48,7 @@
         </activity>
         <activity android:name=".DragNDropActivity">
         </activity>
+        <activity android:name=".YoutubeApi">
+        </activity>
     </application>
 </manifest>
