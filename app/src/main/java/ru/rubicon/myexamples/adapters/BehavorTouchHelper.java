@@ -27,16 +27,15 @@ public class BehavorTouchHelper extends ItemTouchHelper.SimpleCallback {
         adapter.remove(viewHolder.getAdapterPosition());
     }
 
-    @Override public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        int flags = super.getMovementFlags(recyclerView, viewHolder);
-        //System.out.println("flags: " + flags + ", string: " + viewHolder.getAdapterPosition());
-        return flags;
+    @Override
+    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+        super.onSelectedChanged(viewHolder, actionState);
+        System.out.println("selected changed");
     }
 
-    @Override public int getDragDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        int dirs = super.getDragDirs(recyclerView, viewHolder);
-        ((RecyclerViewBehaviorAdapter.SimpleViewHolder)viewHolder).cardView.setBackgroundColor(Color.YELLOW);
-        //System.out.println("dirs: " + dirs + ", string: " + viewHolder.getAdapterPosition());
-        return dirs;
+    @Override
+    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
+        System.out.println("clear view");
     }
 }
