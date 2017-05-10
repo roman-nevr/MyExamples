@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -13,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btnCoordinator, btnBarCode;
     private Button btnCardScroll, btnTextAnimation, btnCustomView, btnRememberWords,
-            btnHero, btnFlip, btnPagerView, btnDragNDrop, btnYoutube;
+            btnHero, btnFlip, btnPagerView, btnDragNDrop, btnYoutube, btnLoader;
 
 
     @Override
@@ -34,14 +35,15 @@ public class MainActivity extends AppCompatActivity {
         buttonSettings(btnBarCode, R.id.btn_barc_code, new BarCodeActivityOnClickListener());
         buttonSettings(btnDragNDrop, R.id.btn_drag_n_drop, new DragNDropOnClickListener());
         buttonSettings(btnYoutube, R.id.btn_youtube, new YoutubeOnClickListener());
+        buttonSettings(btnLoader, R.id.btn_loader, new LoaderClickListener());
     }
 
-    private void buttonSettings(Button btn, @IdRes int id, View.OnClickListener listener){
+    private void buttonSettings(Button btn, @IdRes int id, OnClickListener listener){
         btn = (Button) findViewById(id);
         btn.setOnClickListener(listener);
     }
 
-    private class CoordinatorOnClickListener implements View.OnClickListener{
+    private class CoordinatorOnClickListener implements OnClickListener{
 
         @Override
         public void onClick(View view) {
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class CardScrollOnClickListener implements View.OnClickListener{
+    private class CardScrollOnClickListener implements OnClickListener{
 
         @Override
         public void onClick(View view) {
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class TextAnimationOnClickListener implements View.OnClickListener {
+    private class TextAnimationOnClickListener implements OnClickListener {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, TextAnimationExample.class);
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class CustomViewOnClickListener implements View.OnClickListener {
+    private class CustomViewOnClickListener implements OnClickListener {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, CustomViewExample.class);
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class WordCardsOnClickListener implements View.OnClickListener {
+    private class WordCardsOnClickListener implements OnClickListener {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, RememberWords.class);
@@ -83,28 +85,28 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class HeroOnClickListener implements View.OnClickListener {
+    private class HeroOnClickListener implements OnClickListener {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, Hero.class);
             startActivity(intent);
         }
     }
-    private class FlipActivityOnClickListener implements View.OnClickListener {
+    private class FlipActivityOnClickListener implements OnClickListener {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, FlipActivity.class);
             startActivity(intent);
         }
     }
-    private class PagerViewActivityOnClickListener implements View.OnClickListener {
+    private class PagerViewActivityOnClickListener implements OnClickListener {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, PagerViewExample.class);
             startActivity(intent);
         }
     }
-    private class BarCodeActivityOnClickListener implements View.OnClickListener {
+    private class BarCodeActivityOnClickListener implements OnClickListener {
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(MainActivity.this, BarCode.class);
@@ -112,20 +114,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class DragNDropOnClickListener implements View.OnClickListener{
+    private class DragNDropOnClickListener implements OnClickListener{
         @Override public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, DragNDropActivity.class);
             startActivity(intent);
         }
     }
 
-    private class YoutubeOnClickListener implements View.OnClickListener{
+    private class YoutubeOnClickListener implements OnClickListener{
         @Override public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, YoutubeApi.class);
             startActivity(intent);
         }
     }
 
-
+    private class LoaderClickListener implements OnClickListener{
+        @Override public void onClick(View v) {
+            Intent intent = new Intent(MainActivity.this, LoaderExample.class);
+            startActivity(intent);
+        }
+    }
 
 }

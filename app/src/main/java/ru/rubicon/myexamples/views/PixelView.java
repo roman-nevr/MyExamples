@@ -114,7 +114,7 @@ public class PixelView extends View {
         drawable.setBounds(0, 0, canvas1.getHeight(), canvas1.getWidth());
         drawable.draw(canvas1);
         final Bitmap shadow = addShadow(src, src.getHeight(), src.getWidth(), Color.BLACK, 5, 1, 3);
-        final Bitmap shadow2 = addShadow2(bitmap, bitmap.getHeight(), bitmap.getWidth(), Color.BLACK, 5, 2, 5);
+        final Bitmap shadow2 = addShadow2(src, src.getHeight(), src.getWidth(), Color.BLACK, 5, 2, 5);
         canvas.drawBitmap(shadow, 0, 0, null);
         canvas.drawBitmap(shadow2, shadow.getWidth(), 0, null);
         canvas.drawBitmap(bitmap, shadow.getWidth()*2+50, 0, null);
@@ -214,8 +214,8 @@ public class PixelView extends View {
         final Canvas maskCanvas = new Canvas(mask);
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         maskCanvas.drawBitmap(bm, scaleToFit, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
-        maskCanvas.drawBitmap(bm, dropShadow, paint);
+//        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
+//        maskCanvas.drawBitmap(bm, dropShadow, paint);
 
         final BlurMaskFilter filter = new BlurMaskFilter(size, BlurMaskFilter.Blur.NORMAL);
         paint.reset();
